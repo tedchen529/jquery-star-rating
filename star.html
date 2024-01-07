@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="utf-8" />
+    <title>HW: 5-Star Rating System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      #dis,
+      #dis-res,
+      p {
+        height: 24px;
+        padding: 12px;
+        font-weight: bold;
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <img id="img1" class="stars" src="./imgs/star.gif" />
+      <img id="img2" class="stars" src="./imgs/star.gif" />
+      <img id="img3" class="stars" src="./imgs/star.gif" />
+      <img id="img4" class="stars" src="./imgs/star.gif" />
+      <img id="img5" class="stars" src="./imgs/star.gif" />
+    </div>
+    <div id="dis"></div>
+    <div id="dis-res"></div>
+    <p></p>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+
+    <script>
+      $(".stars").click(function () {
+        $(this).prevAll().attr("src", "./imgs/chngstar.gif");
+        $(this).attr("src", "./imgs/chngstar.gif");
+        $(this).nextAll().attr("src", "./imgs/star.gif");
+        $(this).prevAll().addClass("clicked");
+        $(this).nextAll().removeClass("clicked");
+        $(this).addClass("clicked");
+        $("#dis-res").html(`您給了${$(".clicked").length}顆星`);
+        $("p").html(`可使用滑鼠雙擊重新設定`);
+      });
+
+      $(".stars").mouseenter(function () {
+        if (!$(this).hasClass("clicked")) {
+          $(this).prevAll().attr("src", "./imgs/chngstar.gif");
+          $(this).attr("src", "./imgs/chngstar.gif");
+          $(this).nextAll().attr("src", "./imgs/star.gif");
+        }
+        $("#dis").html(`打分中...${$(this).index() + 1}`);
+      });
+
+      $(".stars").mouseleave(function (e) {
+        if (!$(this).hasClass("clicked") || !$(this).offset().top) {
+          $(this).nextAll().attr("src", "./imgs/star.gif");
+          $(this).attr("src", "./imgs/star.gif");
+        }
+
+        if (
+          !(
+            e.clientY >= $(".stars").offset().top &&
+            e.clientY <= $(".stars").offset().top + 128
+          )
+        ) {
+          $(this).attr("src", "./imgs/chngstar.gif");
+        }
+
+        if (!(e.clientX >= $("#img1").offset().left)) {
+          $("#dis").html(`打分中...0`);
+        } else if (!(e.clientX <= $("#img5").offset().left)) {
+          $("#img5").attr("src", "./imgs/chngstar.gif");
+        }
+      });
+
+      $(".stars").dblclick(function () {
+        if ($(this).hasClass("clicked")) {
+          $(".stars").attr("src", "./imgs/star.gif");
+          $(".stars").removeClass("clicked");
+          $("#dis").html(`您尚未評分`);
+          $("#dis-res").html(``);
+          $("p").html(``);
+        }
+      });
+    </script>
+  </body>
+</html>
